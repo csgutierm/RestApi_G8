@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewAdapter = PostAdapter(postsList)
+        this.viewAdapter = PostAdapter(postsList)
         val postsRecyclerView = findViewById<RecyclerView>(R.id.postsRecyclerView)
         postsRecyclerView.adapter = viewAdapter
 
@@ -36,17 +36,23 @@ class MainActivity : AppCompatActivity() {
                 call: Call<ArrayList<Post>>,
                 response: Response<ArrayList<Post>>
             ) {
-                response.body()?.map {
-                    Log.d("MAIN", "${it.id} - ${it.title}")
-                    postsList.add(it)
+                /*                response.body()?.map {
+                                    Log.d("MAIN", "${it.id} - ${it.title}")
+                                    postsList.add(it)
+                                }
+                                viewAdapter.notifyDataSetChanged()
+                            }*/
+                response.body()?.let { newPosts ->
+                    val startPosition = postsList.size
+                    postsList.addAll(newPosts)
+                    viewAdapter.notifyItemRangeInserted(startPosition, newPosts.size)
                 }
-                viewAdapter.notifyDataSetChanged()
             }
             override fun onFailure(call: Call<ArrayList<Post>>, t:
             Throwable) {
-                Log.d("MAIN", "Error: " + t)
+                Log.d("MAIN", "Error: $t")
                 Toast.makeText(applicationContext,
-                    "Error: no pudimos recuperar los posts desde el api",
+                    "Error: no pudimos recuperar los posts desde la api",
                     Toast.LENGTH_SHORT
                 ).show()
             }
