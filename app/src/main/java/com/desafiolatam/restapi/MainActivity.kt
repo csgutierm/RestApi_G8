@@ -18,6 +18,7 @@ import retrofit2.Response
 class MainActivity : AppCompatActivity() {
 
     private var usersList: ArrayList<User> = arrayListOf()
+    private var photosList: ArrayList<Photo> = arrayListOf()
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
 
 
@@ -25,11 +26,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        this.viewAdapter = UserAdapter(usersList)
-
+/*        this.viewAdapter = UserAdapter(usersList)
         val usersRecyclerView = findViewById<RecyclerView>(R.id.usersRecyclerView)
+        usersRecyclerView.adapter = viewAdapter*/
+        this.viewAdapter = PhotoAdapter(photosList)
+        val photosRecyclerView = findViewById<RecyclerView>(R.id.photosRecyclerView)
+        photosRecyclerView.adapter = viewAdapter
 
-        usersRecyclerView.adapter = viewAdapter
 
         loadApiData()
 
@@ -41,7 +44,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadApiData() {
         val service = RetrofitClient.retrofitInstance()
-        val call = service.getAllUsers()
+
+       /* val call = service.getAllUsers()
         call.enqueue(object : Callback<ArrayList<User>> {
             override fun onResponse(
                 call: Call<ArrayList<User>>,
@@ -61,7 +65,39 @@ class MainActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+        })*/
+        val call = service.getAllPhotos()
+        call.enqueue(object : Callback<ArrayList<Photo>> {
+            override fun onResponse(
+                call: Call<ArrayList<Photo>>,
+                response: Response<ArrayList<Photo>>
+            ) {
+                    if (response.isSuccessful) {
+                        // Maneja la respuesta exitosa aquí, si es necesario
+                        Log.i("Exito",response.toString())
+
+                        Log.i("Exito",response.body().toString())
+                    } else {
+                        // Maneja la respuesta de error aquí, si es necesario
+                        Log.i("Error",response.toString())
+                    }
+
+                response.body()?.let { newPhotos ->
+                    val startPosition = photosList.size
+                    photosList.addAll(newPhotos)
+                    viewAdapter.notifyItemRangeInserted(startPosition, newPhotos.size)
+                }
+            }
+            override fun onFailure(call: Call<ArrayList<Photo>>, t:
+            Throwable) {
+                Log.d("MAIN", "Error: $t")
+                Toast.makeText(applicationContext,
+                    "Error: no pudimos recuperar las fotos desde la api",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         })
+
     }
 
     private fun showCreateUserDialog() {
