@@ -8,18 +8,24 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.desafiolatam.restapi.model.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 class MainActivity : AppCompatActivity() {
 
     private var usersList: ArrayList<User> = arrayListOf()
     private var photosList: ArrayList<Photo> = arrayListOf()
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private val service = RetrofitClient.retrofitInstance()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         val photosRecyclerView = findViewById<RecyclerView>(R.id.photosRecyclerView)
         photosRecyclerView.adapter = viewAdapter
 
-
         loadApiData()
 
         val floatingActionButton = findViewById<FloatingActionButton>(R.id.floatingActionButton)
@@ -43,7 +48,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadApiData() {
-        val service = RetrofitClient.retrofitInstance()
 
        /* val call = service.getAllUsers()
         call.enqueue(object : Callback<ArrayList<User>> {
@@ -73,12 +77,10 @@ class MainActivity : AppCompatActivity() {
                 response: Response<ArrayList<Photo>>
             ) {
                     if (response.isSuccessful) {
-                        // Maneja la respuesta exitosa aquí, si es necesario
                         Log.i("Exito",response.toString())
 
                         Log.i("Exito",response.body().toString())
                     } else {
-                        // Maneja la respuesta de error aquí, si es necesario
                         Log.i("Error",response.toString())
                     }
 
@@ -97,7 +99,6 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
         })
-
     }
 
     private fun showCreateUserDialog() {
@@ -119,7 +120,6 @@ class MainActivity : AppCompatActivity() {
             val email = editTextEmail.text.toString()
             val phone = editTextPhone.text.toString()
 
-            // Lógica para enviar los datos al servidor (usar Retrofit)
             val service = RetrofitClient.retrofitInstance()
             val call = service.createUser(User(1,name,"test", email, phone))
 
@@ -129,10 +129,8 @@ class MainActivity : AppCompatActivity() {
                     response: Response<User>
                 ) {
                     if (response.isSuccessful) {
-                        // Maneja la respuesta exitosa aquí, si es necesario
                         Log.i("Exito",response.toString())
                     } else {
-                        // Maneja la respuesta de error aquí, si es necesario
                         Log.i("Error",response.toString())
                     }
                 }
@@ -147,8 +145,36 @@ class MainActivity : AppCompatActivity() {
                 }
             })
 
-            // Cerrar el diálogo después de enviar los datos
-            alertDialog.dismiss()
+            lifecycleScope.launch {
+                createUserAndHandleResponse(name, email, phone)
+                alertDialog.dismiss()
+            }
+        }
+    }
+
+    private suspend fun createUserAndHandleResponse(
+        name: String,
+        email: String,
+        phone: String
+    ) {
+
+        try {
+            val response = withContext(Dispatchers.IO) {
+                service.createUser(User(1, name, "test", email, phone)).execute()
+            }
+
+            if (response.isSuccessful) {
+                Log.i("Exito", response.toString())
+            } else {
+                Log.i("Error", response.toString())
+            }
+        } catch (e: Exception) {
+            Log.d("MAIN", "Error: $e")
+            Toast.makeText(
+                applicationContext,
+                "Error: no pudimos crear el usuario",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }
