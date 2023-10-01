@@ -30,8 +30,9 @@ class PhotoAdapter(private val myDataset: List<Photo>) :
         val photo = myDataset[position]
         //holder.photoImage.text = photo.url
         Picasso.get()
-           // .load(photo.url)
-            .load("https://i.imgur.com/DvpvklR.png")
+            .load(photo.url)
+            //.load("https://i.imgur.com/DvpvklR.png")
+            //.load(R.drawable.capture3)
             .placeholder(R.drawable.ic_launcher_background)
             .error(androidx.appcompat.R.drawable.abc_btn_check_material)
             .into(holder.photoImage, object : Callback {
