@@ -32,6 +32,8 @@ class PhotoAdapter(private val myDataset: List<Photo>) :
         Picasso.get()
            // .load(photo.url)
             .load("https://i.imgur.com/DvpvklR.png")
+            .placeholder(R.drawable.ic_launcher_background)
+            .error(androidx.appcompat.R.drawable.abc_btn_check_material)
             .into(holder.photoImage, object : Callback {
                 override fun onSuccess() {
                     Log.i("Picasso", "Imagen cargada exitosamente")
