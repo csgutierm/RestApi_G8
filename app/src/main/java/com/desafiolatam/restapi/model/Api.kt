@@ -18,4 +18,12 @@ interface Api {
     @POST("/users")
     fun createUser(@Body user: User): Call<User>
 
+    @GET("/photos")
+    fun getAllPhotos(): Call<ArrayList<Photo>>
+
+    @POST("/photos")
+    fun createPhoto(@Body photo: Photo): Call<Photo>
+
+
+
 }
