@@ -8,8 +8,8 @@
     android:layout_margin="4dp"
     android:padding="6dp">
 
-    <TextView
-        android:id="@+id/name"
+    <ImageView
+        android:id="@+id/photo_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/email"
+        android:id="@+id/photo_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -31,27 +31,10 @@
         android:text="email"
         android:textSize="12sp"
         android:textColor="@color/white"
-        app:layout_constraintBaseline_toBaselineOf="@+id/name"
+        app:layout_constraintBaseline_toBaselineOf="@+id/photo_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintStart_toEndOf="@+id/name" />
-
-    <TextView
-        android:id="@+id/phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:gravity="start"
-        android:text="phone"
-        android:textSize="12sp"
-        android:textColor="@color/white"
-        app:layout_constraintBaseline_toBaselineOf="@+id/email"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintStart_toEndOf="@+id/email" />
-
-
-
+        app:layout_constraintStart_toEndOf="@+id/photo_image" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
