@@ -12,6 +12,7 @@ import com.desafiolatam.restapi.consumo_API.pojo.Categoria
 import com.desafiolatam.restapi.consumo_API.pojo.Producto
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
 
 class ProductoAdapter(private val myDataset: List<Producto>) :
     RecyclerView.Adapter<ProductoAdapter.ProductoHolder>() {
@@ -20,8 +21,10 @@ class ProductoAdapter(private val myDataset: List<Producto>) :
     class ProductoHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     {
 
-        var categoriaImage : ImageView = itemView.findViewById(R.id.producto_image)
-        var categoriaName: TextView = itemView.findViewById(R.id.producto_name)
+        var productoImage : ImageView = itemView.findViewById(R.id.producto_image)
+        var productoName: TextView = itemView.findViewById(R.id.producto_name)
+        var productoPrecio: TextView = itemView.findViewById(R.id.producto_precio)
+        var productoCreacion: TextView = itemView.findViewById(R.id.producto_creacion)
 
     }
 
@@ -41,7 +44,7 @@ class ProductoAdapter(private val myDataset: List<Producto>) :
             .load(producto.images[0])
             .placeholder(R.drawable.ic_launcher_background)
             .error(androidx.appcompat.R.drawable.abc_btn_check_material)
-            .into(holder.categoriaImage, object : Callback {
+            .into(holder.productoImage, object : Callback {
                 override fun onSuccess() {
                     Log.i("Picasso", "Imagen cargada exitosamente")
                 }
@@ -50,9 +53,23 @@ class ProductoAdapter(private val myDataset: List<Producto>) :
                 }
             })
 
-        Log.i("Categorias Links",producto.images[0])
+        Log.i("Productos Links",producto.images[0])
 
-        holder.categoriaName.text = producto.title
+        holder.productoName.text = "Title: " + producto.title
+        holder.productoPrecio.text = "$ " + producto.price.toString()
+
+
+        val fechaOriginal = producto.creationAt
+        val formatoOriginal = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+
+        try {
+            val fecha = formatoOriginal.parse(fechaOriginal)
+            val formatoNuevo = SimpleDateFormat("dd-MM-yyyy")
+            val fechaFormateada = formatoNuevo.format(fecha)
+            holder.productoCreacion.text = "Fecha: $fechaFormateada"
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
     }
 }
