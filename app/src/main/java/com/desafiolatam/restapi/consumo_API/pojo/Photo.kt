@@ -1,4 +1,4 @@
-package com.desafiolatam.restapi.model
+package com.desafiolatam.restapi.consumo_API.POJOs
 
 import com.google.gson.annotations.SerializedName
 
