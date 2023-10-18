@@ -1,12 +1,15 @@
 package com.desafiolatam.restapi.model
 
+import com.desafiolatam.restapi.consumo_API.pojo.Categoria
+import com.desafiolatam.restapi.consumo_API.pojo.Photo
+import com.desafiolatam.restapi.consumo_API.pojo.Producto
 import retrofit2.Call
 import retrofit2.http.*
 import java.util.ArrayList
 
 interface Api {
 
-    @GET("/posts")
+/*    @GET("/posts")
     fun getAllPosts(): Call<ArrayList<Post>>
 
     @DELETE("/posts/{postId}")
@@ -22,8 +25,16 @@ interface Api {
     fun getAllPhotos(): Call<ArrayList<Photo>>
 
     @POST("/photos")
-    fun createPhoto(@Body photo: Photo): Call<Photo>
+    fun createPhoto(@Body photo: Photo): Call<Photo>*/
 
 
+    /**
+    NEW
+     **/
+    @GET("/api/v1/categories")
+    fun getAllCategorias(): Call<ArrayList<Categoria>>
+
+    @GET("/api/v1/products")
+    fun getAllProductos(): Call<ArrayList<Producto>>
 
 }

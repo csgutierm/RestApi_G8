@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.desafiolatam.restapi.R
+import com.desafiolatam.restapi.consumo_API.pojo.Photo
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
@@ -28,18 +29,14 @@ class PhotoAdapter(private val myDataset: List<Photo>) :
 
     override fun onBindViewHolder(holder: PhotoHolder, position: Int) {
         val photo = myDataset[position]
-        //holder.photoImage.text = photo.url
         Picasso.get()
             .load(photo.url)
-            //.load("https://i.imgur.com/DvpvklR.png")
-            //.load(R.drawable.capture3)
             .placeholder(R.drawable.ic_launcher_background)
             .error(androidx.appcompat.R.drawable.abc_btn_check_material)
             .into(holder.photoImage, object : Callback {
                 override fun onSuccess() {
                     Log.i("Picasso", "Imagen cargada exitosamente")
                 }
-
                 override fun onError(e: Exception?) {
                     Log.e("Picasso", "Error al cargar la imagen: ${e?.message}")
                 }
