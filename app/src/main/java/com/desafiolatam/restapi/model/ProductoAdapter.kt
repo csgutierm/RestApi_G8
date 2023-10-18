@@ -9,34 +9,36 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.desafiolatam.restapi.R
 import com.desafiolatam.restapi.consumo_API.pojo.Categoria
+import com.desafiolatam.restapi.consumo_API.pojo.Producto
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
-class CategoriaAdapter(private val myDataset: List<Categoria>) :
-    RecyclerView.Adapter<CategoriaAdapter.CategoriaHolder>() {
+class ProductoAdapter(private val myDataset: List<Producto>) :
+    RecyclerView.Adapter<ProductoAdapter.ProductoHolder>() {
 
 
-    class CategoriaHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class ProductoHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     {
 
-        var categoriaImage : ImageView = itemView.findViewById(R.id.categoria_image)
-        var categoriaName: TextView = itemView.findViewById(R.id.categoria_name)
+        var categoriaImage : ImageView = itemView.findViewById(R.id.producto_image)
+        var categoriaName: TextView = itemView.findViewById(R.id.producto_name)
+
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriaHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductoHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.categorias_list_item, parent, false)
-        return CategoriaHolder(view)
+            .inflate(R.layout.productos_list_item, parent, false)
+        return ProductoHolder(view)
     }
 
     override fun getItemCount(): Int {
         return myDataset.size
     }
 
-    override fun onBindViewHolder(holder: CategoriaHolder, position: Int) {
-        val categoria = myDataset[position]
+    override fun onBindViewHolder(holder: ProductoHolder, position: Int) {
+        val producto = myDataset[position]
         Picasso.get()
-            .load(categoria.image)
+            .load(producto.images[0])
             .placeholder(R.drawable.ic_launcher_background)
             .error(androidx.appcompat.R.drawable.abc_btn_check_material)
             .into(holder.categoriaImage, object : Callback {
@@ -48,8 +50,9 @@ class CategoriaAdapter(private val myDataset: List<Categoria>) :
                 }
             })
 
-        Log.i("Categorias Links",categoria.image)
+        Log.i("Categorias Links",producto.images[0])
 
-        holder.categoriaName.text = categoria.name
+        holder.categoriaName.text = producto.title
+
     }
 }

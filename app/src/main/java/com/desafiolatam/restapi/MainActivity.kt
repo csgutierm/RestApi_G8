@@ -1,9 +1,11 @@
 package com.desafiolatam.restapi
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -28,6 +30,8 @@ class MainActivity : AppCompatActivity() {
 
     private var usersList: ArrayList<User> = arrayListOf()
     private var photosList: ArrayList<Photo> = arrayListOf()
+    private var categoriasList: ArrayList<Categoria> = arrayListOf()
+    private var productosList: ArrayList<Producto> = arrayListOf()
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private val service = RetrofitClient.retrofitInstance()
 
@@ -39,9 +43,40 @@ class MainActivity : AppCompatActivity() {
         /*        this.viewAdapter = UserAdapter(usersList)
                 val usersRecyclerView = findViewById<RecyclerView>(R.id.usersRecyclerView)
                 usersRecyclerView.adapter = viewAdapter*/
-        this.viewAdapter = PhotoAdapter(photosList)
-        val photosRecyclerView = findViewById<RecyclerView>(R.id.photosRecyclerView)
-        photosRecyclerView.adapter = viewAdapter
+        /**
+         *          this.viewAdapter = PhotoAdapter(photosList)
+         *          val photosRecyclerView = findViewById<RecyclerView>(R.id.photosRecyclerView)
+         *          photosRecyclerView.adapter = viewAdapter
+         *
+         */
+        this.viewAdapter = CategoriaAdapter(categoriasList)
+        val categoriasRecyclerView = findViewById<RecyclerView>(R.id.categoriasRecyclerView)
+        categoriasRecyclerView.adapter = viewAdapter
+
+        categoriasRecyclerView.addOnItemTouchListener(
+            RecyclerItemClickListener(this, categoriasRecyclerView,
+                object : RecyclerItemClickListener.OnItemClickListener {
+                    override fun onItemClick(view: View, position: Int) {
+
+                        val categoriaSeleccionada = categoriasList[position]
+
+                        val intent = Intent(this@MainActivity, CategoriaActivity::class.java)
+
+                        // datos pasados al nuevo Activity si es necesario
+                        intent.putExtra("categoriaId", categoriaSeleccionada.id)
+                        intent.putExtra("categoriaNombre", categoriaSeleccionada.name)
+                        intent.putExtra("categoriaCreation", categoriaSeleccionada.creationAt)
+                        intent.putExtra("categoriaImage", categoriaSeleccionada.image)
+                        intent.putExtra("categoriaUpdate", categoriaSeleccionada.updatedAt)
+
+                        startActivity(intent)
+                    }
+
+                    override fun onItemLongClick(view: View?, position: Int) {
+                        // TODO
+                    }
+                })
+        )
 
         loadApiData()
 
@@ -68,6 +103,12 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     Log.i("Error Categoria",response.toString())
                 }
+
+                response.body()?.let { newCategorias ->
+                    val startPosition = categoriasList.size
+                    categoriasList.addAll(newCategorias)
+                    viewAdapter.notifyItemRangeInserted(startPosition, newCategorias.size)
+                }
             }
 
             override fun onFailure(call: Call<ArrayList<Categoria>>, t: Throwable) {
@@ -79,7 +120,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        callProductos.enqueue(object : Callback<ArrayList<Producto>> {
+        /*callProductos.enqueue(object : Callback<ArrayList<Producto>> {
             override fun onResponse(
                 call: Call<ArrayList<Producto>>,
                 response: Response<ArrayList<Producto>>
@@ -91,6 +132,12 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     Log.i("Error Producto",response.toString())
                 }
+
+                response.body()?.let { newProductos ->
+                    val startPosition = productosList.size
+                    productosList.addAll(newProductos)
+                    viewAdapter.notifyItemRangeInserted(startPosition, newProductos.size)
+                }
             }
 
             override fun onFailure(call: Call<ArrayList<Producto>>, t: Throwable) {
@@ -100,7 +147,7 @@ class MainActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-        })
+        })*/
     }
 
 
