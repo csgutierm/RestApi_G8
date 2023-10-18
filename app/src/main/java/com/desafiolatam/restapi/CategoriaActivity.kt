@@ -1,16 +1,20 @@
 package com.desafiolatam.restapi
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.desafiolatam.restapi.consumo_API.clientes.RetrofitClient
 import com.desafiolatam.restapi.consumo_API.pojo.Categoria
+import com.desafiolatam.restapi.consumo_API.pojo.Photo
 import com.desafiolatam.restapi.consumo_API.pojo.Producto
 import com.desafiolatam.restapi.model.CategoriaAdapter
 import com.desafiolatam.restapi.model.ProductoAdapter
+import com.desafiolatam.restapi.model.User
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,6 +41,36 @@ class CategoriaActivity : AppCompatActivity() {
         this.viewAdapter = ProductoAdapter(productosList)
         val productosRecyclerView = findViewById<RecyclerView>(R.id.productosRecyclerView)
         productosRecyclerView.adapter = viewAdapter
+
+
+        productosRecyclerView.addOnItemTouchListener(
+            RecyclerItemClickListener(this, productosRecyclerView,
+                object : RecyclerItemClickListener.OnItemClickListener {
+                    override fun onItemClick(view: View, position: Int) {
+
+                        val productoSeleccionado = productosList[position]
+
+                        val intent = Intent(this@CategoriaActivity, ProductoActivity::class.java)
+
+                        // datos pasados al nuevo Activity si es necesario
+                        intent.putExtra("productoId", productoSeleccionado.id)
+                        intent.putExtra("productoNombre", productoSeleccionado.title)
+                        intent.putExtra("productoCreation", productoSeleccionado.creationAt)
+                        intent.putExtra("productoPrecio", productoSeleccionado.price)
+                        intent.putExtra("productoDescripcion", productoSeleccionado.description)
+
+
+                        intent.putStringArrayListExtra("productoImages", ArrayList(productoSeleccionado.images))
+
+
+
+                        startActivity(intent)
+                    }
+                    override fun onItemLongClick(view: View?, position: Int) {
+                        // TODO
+                    }
+                })
+        )
 
         loadApiData()
     }
