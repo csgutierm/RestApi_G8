@@ -1,6 +1,4 @@
-package com.desafiolatam.restapi.model
-
-import com.google.gson.annotations.SerializedName
+package com.desafiolatam.restapi.consumo_API.pojo
 
 
 data class Photo(
